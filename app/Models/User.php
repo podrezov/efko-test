@@ -45,4 +45,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+    public function vacations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Vacation::class);
+    }
+
+    public function hasRole(int $roleId): bool
+    {
+        return !!$this->roles->firstWhere('id', $roleId);
+    }
 }

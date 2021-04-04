@@ -17,8 +17,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+# auth routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-require __DIR__.'/auth.php';
+    # vacations
+    Route::prefix('vacations')->as('vacations.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\VacationController::class, 'index'])->name('index');
+        Route::get('/search', [\App\Http\Controllers\VacationController::class, 'search'])->name('search');
+        Route::post('/', [\App\Http\Controllers\VacationController::class, 'store'])->name('store');
+        Route::post('/{vacation}/fixed', [\App\Http\Controllers\VacationController::class, 'fixed'])->name('fixed');
+    });
+});
+
+require __DIR__ . '/auth.php';
