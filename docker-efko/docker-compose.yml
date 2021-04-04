@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - 80:80
+    links:
+      - php-fpm
+    volumes:
+      - ../:/var/www:cached
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    build: ./php-fpm
+    restart: always
+    volumes:
+      - ../:/var/www:cached
+    links:
+      - mysql
+    ports:
+      - 19200:19200
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: efko
+
+  composer:
+    build: ./composer
+    volumes:
+      - ../:/var/www
+    depends_on:
+      - php-fpm
+    links:
+      - php-fpm
