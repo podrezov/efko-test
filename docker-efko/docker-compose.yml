@@ -31,12 +31,3 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: efko
-
-  composer:
-    build: ./composer
-    volumes:
-      - ../:/var/www
-    depends_on:
-      - php-fpm
-    links:
-      - php-fpm
